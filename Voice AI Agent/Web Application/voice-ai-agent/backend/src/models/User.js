@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Password is required"],
       minlength: 6,
-      select: false, // Don't return password by default
+      select: false,
     },
     businessName: {
       type: String,
@@ -40,11 +40,10 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Hash password before saving
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+// Hash password before saving (Fixed version)
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password, 12);
-  next();
 });
 
 // Compare password method
