@@ -9,6 +9,7 @@ dotenv.config();
 
 // Calling of the routes
 const authRoutes = require("./routes/authRoutes");
+const vapiRoutes = require("./routes/vapiRoutes");
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(morgan("dev"));
 // ================================
 
 app.use("/api/auth", authRoutes);
+app.use("/api/vapi", vapiRoutes);
 
 // ================================
 // MongoDB Connection
