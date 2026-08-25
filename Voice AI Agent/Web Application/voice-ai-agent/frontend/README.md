@@ -1,75 +1,249 @@
-# React + TypeScript + Vite
+💻 Zaibten Voice AI Agent — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🎙️ Modern React + TypeScript frontend for the Zaibten Voice AI Agent.
 
-Currently, two official plugins are available:
+-------------------------------------------------------------------------------
+🌟 About
+-------------------------------------------------------------------------------
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+This is the frontend application for the Zaibten Voice AI Agent.
 
-## React Compiler
+The application provides the user interface for interacting with the AI voice assistant and communicates with the backend through REST APIs.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The frontend is designed to provide a clean, modern, responsive, and scalable experience.
 
-## Expanding the ESLint configuration
+-------------------------------------------------------------------------------
+🛠️ Technology Stack
+-------------------------------------------------------------------------------
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- ⚛️ React
+- 📘 TypeScript
+- ⚡ Vite
+- 🔗 Axios
+- 🎨 CSS / UI Components
+- ☁️ Vercel
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+-------------------------------------------------------------------------------
+📁 Project Structure
+-------------------------------------------------------------------------------
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+frontend/
+│
+├── 📁 public/
+│
+├── 📁 src/
+│   ├── 📁 components/
+│   ├── 📁 pages/
+│   ├── 📁 layouts/
+│   ├── 📁 services/
+│   ├── 📁 hooks/
+│   ├── 📁 utils/
+│   ├── 📄 App.tsx
+│   ├── 📄 main.tsx
+│   └── 📄 ...
+│
+├── 📄 index.html
+├── 📄 package.json
+├── 📄 tsconfig.json
+├── 📄 vite.config.ts
+└── 📄 README.md
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
+-------------------------------------------------------------------------------
+🚀 Installation
+-------------------------------------------------------------------------------
+
+From the frontend directory:
+
+npm install
+
+-------------------------------------------------------------------------------
+▶️ Development
+-------------------------------------------------------------------------------
+
+Run:
+
+npm run dev
+
+Vite will provide a local URL similar to:
+
+http://localhost:5173
+
+-------------------------------------------------------------------------------
+🔗 Backend Connection
+-------------------------------------------------------------------------------
+
+The frontend communicates with the backend using Axios.
+
+Create a .env file in the frontend directory:
+
+.env
+
+Example:
+
+VITE_API_URL=http://localhost:5000
+
+-------------------------------------------------------------------------------
+🔌 Axios Configuration
+-------------------------------------------------------------------------------
+
+Example configuration:
+
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  headers: {
+    "Content-Type": "application/json",
   },
-])
+});
 
-```
+export default api;
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+-------------------------------------------------------------------------------
+🎙️ Voice AI Flow
+-------------------------------------------------------------------------------
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+The frontend will eventually follow this flow:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+🎙️ User Speaks
+       │
+       ▼
+🎤 Microphone
+       │
+       ▼
+📝 Speech-to-Text
+       │
+       ▼
+🤖 AI Backend
+       │
+       ▼
+🧠 AI Processing
+       │
+       ▼
+🔊 Text-to-Speech
+       │
+       ▼
+🎧 User Hears Response
 
-```
+-------------------------------------------------------------------------------
+🤖 AI Features
+-------------------------------------------------------------------------------
+
+The frontend architecture is designed to support:
+
+- 🎙️ Voice input
+- 🔊 Voice output
+- 💬 AI conversations
+- 🧠 Conversation history
+- ⚡ Streaming responses
+- 🎭 AI personalities
+- 🌐 Multiple languages
+- 🤖 Multiple AI agents
+- 🛠️ AI tools
+
+-------------------------------------------------------------------------------
+🧩 Components
+-------------------------------------------------------------------------------
+
+Future components may include:
+
+- 🎙️ VoiceButton
+- 🎧 AudioVisualizer
+- 💬 ChatInterface
+- 🤖 AIResponse
+- 📝 Transcript
+- 🔊 VoicePlayer
+- ⚙️ Settings
+- 👤 UserProfile
+- 📜 ConversationHistory
+
+-------------------------------------------------------------------------------
+🌍 Production Environment
+-------------------------------------------------------------------------------
+
+For Vercel deployment, configure:
+
+VITE_API_URL=https://your-backend.vercel.app
+
+⚠️ Important: Never put private API keys such as OpenAI keys in frontend environment variables.
+
+Only public configuration should use the VITE_ prefix.
+
+-------------------------------------------------------------------------------
+☁️ Deployment
+-------------------------------------------------------------------------------
+
+Build the application:
+
+npm run build
+
+Preview the production build locally:
+
+npm run preview
+
+Deploy to Vercel:
+
+vercel
+
+-------------------------------------------------------------------------------
+🔄 Application Architecture
+-------------------------------------------------------------------------------
+
+┌──────────────────────────┐
+│      React Frontend      │
+│      TypeScript + Vite   │
+└────────────┬─────────────┘
+             │
+             │ Axios
+             ▼
+┌──────────────────────────┐
+│      Express Backend     │
+│       Node.js API        │
+└────────────┬─────────────┘
+             │
+       ┌─────┴─────┐
+       ▼           ▼
+   🤖 AI APIs   🗄️ MongoDB
+
+-------------------------------------------------------------------------------
+🧪 Development
+-------------------------------------------------------------------------------
+
+Start frontend:
+
+npm run dev
+
+Start backend separately:
+
+cd ../backend
+npm run dev
+
+Both applications should be running simultaneously during development.
+
+-------------------------------------------------------------------------------
+🎨 Development Guidelines
+-------------------------------------------------------------------------------
+
+- Use TypeScript for new components
+- Keep components reusable
+- Keep API calls inside service/API files
+- Do not expose private API keys
+- Keep UI responsive
+- Use environment variables for API URLs
+- Follow a modular folder structure
+
+-------------------------------------------------------------------------------
+🚧 Project Status
+-------------------------------------------------------------------------------
+
+🚧 Active Development
+
+The frontend is currently being developed as part of the larger Zaibten Voice AI Agent project.
+
+-------------------------------------------------------------------------------
+👨‍💻 Maintained By
+-------------------------------------------------------------------------------
+
+Zaibten
+
+🚀 Building intelligent, practical, and scalable AI agents.
