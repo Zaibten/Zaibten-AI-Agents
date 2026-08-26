@@ -9,6 +9,11 @@ dotenv.config();
 
 // Calling of the routes
 const authRoutes = require("./routes/authRoutes");
+const phoneRoutes = require("./routes/phoneRoutes");
+const callRoutes = require("./routes/callRoutes");
+const appointmentRoutes = require("./routes/appointmentRoutes");
+const leadRoutes = require("./routes/leadRoutes");
+const analyticsRoutes = require("./routes/analyticsRoutes");
 const vapiRoutes = require("./routes/vapiRoutes");
 
 const app = express();
@@ -26,6 +31,11 @@ app.use(morgan("dev"));
 // ================================
 
 app.use("/api/auth", authRoutes);
+app.use("/api/phone-numbers", phoneRoutes);
+app.use("/api/calls", callRoutes);
+app.use("/api/appointments", appointmentRoutes);
+app.use("/api/leads", leadRoutes);
+app.use("/api/analytics", analyticsRoutes);
 app.use("/api/vapi", vapiRoutes);
 
 // ================================
