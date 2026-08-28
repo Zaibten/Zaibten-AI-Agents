@@ -8,20 +8,20 @@ const PhoneNumber = require("../models/PhoneNumber");
 
 router.post("/webhook", async (req, res) => {
   try {
-    const { message } = req.body;
+    const body = req.body;
+    const message = body.message;
 
     if (!message) {
       return res.status(200).json({ received: true });
     }
 
-    console.log("📩 Vapi Event →", message.type);
+    console.log("📩 Vapi Event:", message.type);
 
-    // ==========================================
-    // Helper: Find User from Phone Number
-    // ==========================================
+    // ==============================
+    // Helper: Find User from Call
+    // ==============================
     const findUserFromCall = async (call) => {
       try {
-        // Vapi usually sends phoneNumberId
         const phoneNumberId = call?.phoneNumberId || call?.phoneNumber?.id;
 
         if (phoneNumberId) {
@@ -29,16 +29,8 @@ router.post("/webhook", async (req, res) => {
             vapiPhoneNumberId: phoneNumberId,
             isActive: true,
           });
-
           if (phoneDoc) return phoneDoc.user;
         }
-
-        // Fallback: try matching by number
-        const customerNumber = call?.customer?.number;
-        if (customerNumber) {
-          // This is less reliable, but can be used as backup
-        }
-
         return null;
       } catch (error) {
         console.error("Error finding user:", error.message);
@@ -46,11 +38,11 @@ router.post("/webhook", async (req, res) => {
       }
     };
 
-    // ==========================================
-    // 1. END OF CALL REPORT
-    // ==========================================
+    // ==============================
+    // 1. End of Call Report
+    // ==============================
     if (message.type === "end-of-call-report") {
-      const callData = message.call;
+      const callData = message.call || {};
       const userId = await findUserFromCall(callData);
 
       if (!userId) {
@@ -65,12 +57,11 @@ router.post("/webhook", async (req, res) => {
             )
           : 0;
 
-      const newCall = await Call.create({
+      await Call.create({
         user: userId,
         vapiCallId: callData.id,
         phoneNumber: callData.customer?.number || "Unknown",
-        direction:
-          callData.type === "outboundPhoneCall" ? "outbound" : "inbound",
+        direction: callData.type === "outboundPhoneCall" ? "outbound" : "inbound",
         status: "ended",
         startedAt: callData.startedAt,
         endedAt: callData.endedAt,
@@ -81,30 +72,31 @@ router.post("/webhook", async (req, res) => {
         metadata: message,
       });
 
-      console.log("✅ Call saved dynamically for user:", userId);
+      console.log("✅ Call saved for user:", userId);
     }
 
-    // ==========================================
-    // 2. FUNCTION CALL (Dynamic)
-    // ==========================================
-    if (message.type === "function-call") {
-      const { functionCall, call } = message;
-      const name = functionCall?.name;
-      const parameters = functionCall?.parameters || {};
+    // ==============================
+    // 2. Function / Tool Calls
+    // ==============================
+    if (message.type === "function-call" || message.type === "tool-calls") {
+      const functionCall = message.functionCall || message.toolCallList?.[0];
+      const call = message.call || {};
+      const name = functionCall?.name || functionCall?.function?.name;
+      const parameters = functionCall?.parameters || functionCall?.arguments || {};
 
       const userId = await findUserFromCall(call);
 
       if (!userId) {
         return res.status(200).json({
-          result: "Sorry, I could not process your request at the moment.",
+          result: "Sorry, I am unable to process your request right now.",
         });
       }
 
-      console.log("🔧 Function:", name, "| User:", userId);
+      console.log("🔧 Function Called:", name);
 
-      // ---------- Book Appointment ----------
+      // Book Appointment
       if (name === "bookAppointment") {
-        const appointment = await Appointment.create({
+        await Appointment.create({
           user: userId,
           fullName: parameters.fullName,
           phoneNumber: parameters.phoneNumber,
@@ -115,7 +107,6 @@ router.post("/webhook", async (req, res) => {
           status: "confirmed",
         });
 
-        // Create Lead
         await Lead.create({
           user: userId,
           fullName: parameters.fullName,
@@ -126,25 +117,22 @@ router.post("/webhook", async (req, res) => {
         });
 
         return res.status(200).json({
-          result: `Great! I’ve successfully booked an appointment for ${parameters.fullName} on ${parameters.preferredDate} at ${parameters.preferredTime}.`,
+          result: `Perfect! I have successfully booked an appointment for ${parameters.fullName} on ${parameters.preferredDate} at ${parameters.preferredTime}.`,
         });
       }
 
-      // ---------- Check Availability ----------
+      // Check Availability
       if (name === "checkAvailability") {
-        // Later we will connect real Google Calendar here
         return res.status(200).json({
           result: "Yes, that time slot is available.",
         });
       }
 
-      // Default
       return res.status(200).json({
         result: "Request processed successfully.",
       });
     }
 
-    // Always respond to Vapi
     res.status(200).json({ received: true });
   } catch (error) {
     console.error("❌ Webhook Error:", error.message);
