@@ -9,6 +9,7 @@ import CallDetail from "./pages/CallDetail";
 import Appointments from "./pages/Appointments";
 import Leads from "./pages/Leads";
 import PhoneNumbers from "./pages/PhoneNumbers";
+import Settings from "./pages/Settings";
 
 const App = () => {
   const { user, loading } = useAuth();
@@ -36,6 +37,7 @@ const App = () => {
         <Route path="/calls" element={<Calls />} />
         <Route path="/calls/:id" element={<CallDetail />} />
         <Route path="/phone-numbers" element={<PhoneNumbers />} />
+        <Route path="/settings" element={<Settings />} />
 
 
       </Route>

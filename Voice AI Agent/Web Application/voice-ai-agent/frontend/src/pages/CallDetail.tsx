@@ -74,14 +74,23 @@ const CallDetail = () => {
             </div>
           </div>
 
-          {call.recordingUrl && (
-            <div className="bg-white rounded-xl shadow p-6">
-              <h2 className="font-semibold mb-3">Recording</h2>
-              <audio controls className="w-full">
-                <source src={call.recordingUrl} />
-              </audio>
-            </div>
-          )}
+      {call.recordingUrl && (
+  <div className="bg-white rounded-xl shadow p-6">
+    <h2 className="font-semibold mb-3">Call Recording</h2>
+    <audio controls className="w-full">
+      <source src={call.recordingUrl} type="audio/wav" />
+      Your browser does not support the audio element.
+    </audio>
+    <a
+      href={call.recordingUrl}
+      target="_blank"
+      rel="noreferrer"
+      className="text-blue-600 text-sm mt-2 inline-block"
+    >
+      Download Recording
+    </a>
+  </div>
+)}
         </div>
       </div>
     </div>
